@@ -1,65 +1,42 @@
-# Salad Plant Growth Analysis API
+# Salad Plant Growth Analysis System
 
 ## Overview
-This project uses the OpenAI API to process natural language queries related to the growth of salad plants. Users can submit prompts, and the system will retrieve relevant data, perform analysis, and generate insights in the form of text or analytical graphs.
+This system leverages the **Ollama** open-source model for analyzing plant growth data. It allows users to input queries about plant growth and receive textual insights as well as graphical visualizations (e.g., growth trends, predictions) directly in **Power Apps**. The system utilizes **Microsoft Dataverse** for data storage and **Azure** for model hosting and API deployment.
 
 ## Workflow
-### 1. User Query Processing
-- Users submit a prompt (e.g., *"Show me the weight trend of Iceberg lettuce over the last 3 months."*).
-- The API receives and forwards the request to OpenAI for processing.
 
-### 2. Natural Language Processing (NLP) with OpenAI API
-- OpenAI interprets the query to determine:
-  - The **type of request** (data retrieval, statistical summary, graph generation).
-  - The **parameters** (salad type, time range, growth metrics such as height or weight).
-- The system identifies the best visualization type if a graph is required.
+1. **Data Management:**
+   - Data is updated weekly in **Microsoft List** and migrated to **Microsoft Dataverse** using **Power Automate**.
 
-### 3. Database Query Execution
-- The backend translates the extracted parameters into a **SQL or NoSQL query**.
-- The database fetches the relevant **growth data** (height, weight, volume, etc.).
+2. **Model Development:**
+   - The **Ollama model** is used to generate insights and predictions based on plant growth data.
+   - Graphs are generated using **Matplotlib** or **Plotly**.
 
-### 4. Data Processing & Analysis
-- Data is cleaned and prepared for analysis.
-- If necessary, statistical computations (e.g., averages, growth rates) are performed.
+3. **API Deployment:**
+   - The model is deployed as an API on **Azure App Service** or **Azure Functions**.
+   - The API handles user queries, processes them with the Ollama model, and returns textual insights and graphs.
 
-### 5. Visualization & Response Generation
-- If a graph is needed:
-  - Data is plotted using **Matplotlib/Plotly**.
-  - The graph is saved and returned as an image link.
-- If a text response is needed:
-  - A summary is generated based on the data.
-  - OpenAI refines the response into a user-friendly format.
+4. **Frontend (Power Apps):**
+   - **Power Apps** serves as the user interface, where users input queries and view results (textual insights and graphs).
+   - **Power Automate** integrates Power Apps with the Azure-hosted model API.
 
-### 6. API Response & User Output
-- The API returns either:
-  - A **graph image** (if visualization was requested).
-  - A **text-based analytical insight** (if no visualization was needed).
-- The frontend displays the result to the user.
+## Steps to Deploy
 
-## Technology Stack
-| Component              | Tool/Technology           |
-|------------------------|--------------------------|
-| **Backend API**       | FastAPI / Flask          |
-| **Database**          | MySQL / PostgreSQL / MongoDB |
-| **AI Model**          | OpenAI GPT-4 (via API)   |
-| **Visualization**     | Matplotlib / Seaborn / Plotly |
-| **Deployment**        | Docker + Cloud (AWS/GCP) |
+1. **Set up Microsoft Dataverse** for storing plant data.
+2. **Migrate plant data** from Microsoft List to Dataverse using Power Automate.
+3. **Train and deploy the Ollama model** on Azure (using FastAPI or Flask).
+4. **Integrate the model API** with Power Apps using Power Automate.
+5. **Test the system** to ensure smooth user interaction and real-time graph generation.
 
-## Setup Instructions
-1. Clone this repository:
-   ```sh
-   git clone https://github.com/your-repo/salad-growth-api.git
-   cd salad-growth-api
-   ```
-2. Install dependencies:
-   ```sh
-   pip install -r requirements.txt
-   ```
-3. Set up environment variables for OpenAI API key and database connection.
-4. Run the backend API:
-   ```sh
-   python main.py
-   ```
-5. Test API endpoints using Postman or a web client.
+## Prerequisites
 
+- **Microsoft Dataverse** for data storage.
+- **Azure Subscription** for deploying the model and API.
+- **Power Apps** for the frontend user interface.
+- **Power Automate** for workflow automation.
+- **Matplotlib/Plotly** for generating graphs.
+- **Ollama model** for plant growth analysis.
 
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
