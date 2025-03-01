@@ -37,6 +37,7 @@ This system leverages the **Ollama** open-source model for analyzing plant growt
 - **Matplotlib/Plotly** for generating graphs.
 - **Ollama model** for plant growth analysis.
 
-## License
+## Workflow
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+<img width="912" alt="Screenshot 2025-03-01 at 10 12 16 PM" src="https://github.com/user-attachments/assets/aa8a6562-46f6-4b88-9e93-25a58f86fe10" />
+
