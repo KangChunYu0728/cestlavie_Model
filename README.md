@@ -10,6 +10,7 @@ This system leverages the **Ollama** open-source model for analyzing plant growt
 
 2. **Model Development:**
    - The **Ollama model** is used to generate insights and predictions based on plant growth data.
+   - Here is the repo for Ollama: https://github.com/ollama/ollama
    - Graphs are generated using **Matplotlib** or **Plotly**.
 
 3. **API Deployment:**
