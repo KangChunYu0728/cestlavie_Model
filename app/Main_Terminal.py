@@ -70,10 +70,10 @@ print(response['message']['content'])
 ### 7️⃣ Create Visualization
 # Bar plot: average planting duration per product
 plt.figure(figsize=(10, 5))
-sns.barplot(data=df, x="產品名稱", y="種植時間（日數）", estimator='mean', ci=None)
-plt.title("📈 各產品平均種植時間（日數）")
+sns.barplot(data=df, x="產品名稱", y="種植時間（日）", estimator='mean', errorbar=None)
+plt.title("📈 各產品平均種植時間（日）")
 plt.xticks(rotation=45)
-plt.tight_layout()
+#plt.tight_layout()
 
 # Save the chart
 #output_file = "salad_growth_chart.png"
