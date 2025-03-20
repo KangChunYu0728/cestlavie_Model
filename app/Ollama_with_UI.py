@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import scrolledtext
-import ollama
+import ollama # type: ignore
 
 # 創建 GUI 主視窗
 root = tk.Tk()
