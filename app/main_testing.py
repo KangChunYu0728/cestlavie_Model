@@ -75,8 +75,28 @@ def load_data():
             with open(file_path, "r", encoding="utf-8") as file:
                 json_data = json.loads(file.read())
             
+            # 驗證並過濾資料
+            required_columns = ["產品編號", "產品名稱", "種植日期", "採收日期", "狀態"]
+            if 'Sheet1' not in json_data:
+                raise ValueError("❌ JSON 格式錯誤: 找不到必要的資料欄位 'Sheet1'")
+            
+            valid_records = []
+            invalid_count = 0
+            for record in json_data['Sheet1']:
+                if all(column in record for column in required_columns):
+                    valid_records.append(record)
+                else:
+                    invalid_count += 1
+            
+            if not valid_records:
+                raise ValueError("沒有找到符合要求的資料記錄")
+            
+            if invalid_count > 0:
+                print(f"已排除 {invalid_count} 筆不完整的資料記錄")
+            print(f"❌ 無效的資料記錄數量: {invalid_count}")
+            
             # 將 JSON 資料轉換為 DataFrame
-            df = pd.DataFrame(json_data["Sheet1"])
+            df = pd.DataFrame(valid_records)
             
             # 轉換日期欄位
             df["種植日期"] = pd.to_datetime(df["種植日期"])
