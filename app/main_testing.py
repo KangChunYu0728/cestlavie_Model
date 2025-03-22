@@ -6,6 +6,8 @@ import seaborn as sns
 import os
 import tkinter as tk
 from tkinter import scrolledtext
+import json
+import sys
 
 ### ① 檢查是否安裝 Ollama 模型工具
 def check_ollama_installed():
@@ -36,12 +38,74 @@ def pull_model(model_name="mistral"):
 if check_ollama_installed():
     pull_model("mistral")
 
-### ④ 讀取 Excel 檔案中的產品資料
-df = pd.read_excel("/Users/davidkang/Desktop/Cest la Vie/cestlavie_Model/cestlavie_Model/app/merged_product_data_sorted.xlsx")
-df["種植日期"] = pd.to_datetime(df["種植日期"])
-df["採收日期"] = pd.to_datetime(df["採收日期"])
-df["種植時間（日）"] = (df["採收日期"] - df["種植日期"]).dt.days
+### ④ 讀取 JSON 檔案中的產品資料
+def load_data():
+    while True:
+        try:
+            # 取得目前腳本所在的資料夾路徑
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            
+            # 讓使用者輸入檔案名稱（預設值為 merged_product_data_sorted_json.json）
+            default_file = "merged_product_data_sorted_json.json"
+            file_name = input(f"請輸入JSON檔案名稱 (直接按 Enter 使用預設檔案 {default_file}，按 'q' 退出): ").strip()
+            
+            if file_name.lower() == 'q':
+                print("程式已退出")
+                sys.exit(0)
+            
+            # 如果使用者沒有輸入，使用預設檔案
+            if not file_name:
+                file_name = default_file
+            
+            # 組合完整檔案路徑
+            file_path = os.path.join(current_dir, file_name)
+            
+            # 檢查檔案是否存在
+            if not os.path.exists(file_path):
+                print(f"❌ 找不到檔案: {file_path}")
+                continue
+                
+            # 檢查檔案副檔名
+            if not file_name.endswith('.json'):
+                print("❌ 請選擇 JSON 檔案 (.json)")
+                continue
+            
+            print(f"📂 正在讀取檔案: {file_path}")
+            
+            with open(file_path, "r", encoding="utf-8") as file:
+                json_data = json.loads(file.read())
+            
+            # 將 JSON 資料轉換為 DataFrame
+            df = pd.DataFrame(json_data["Sheet1"])
+            
+            # 轉換日期欄位
+            df["種植日期"] = pd.to_datetime(df["種植日期"])
+            df["採收日期"] = pd.to_datetime(df["採收日期"])
+            
+            # 計算種植時間
+            df["種植時間（日）"] = (df["採收日期"] - df["種植日期"]).dt.days
+            
+            print("✅ 檔案載入成功！")
+            return df
+            
+        except Exception as e:
+            print(f"❌ 讀取資料時發生錯誤: {str(e)}")
+        
+        retry = input("是否要重試？(y/n): ").lower()
+        if retry != 'y':
+            print("程式已退出")
+            sys.exit(1)
 
+# 載入資料
+df = load_data()
+
+# 確保資料成功載入後才繼續執行
+if df is not None:
+    summary = df.describe(include='all').to_string()
+else:
+    print("❌ 無法載入資料")
+    sys.exit(1)
+    
 # ⑤ 將資料摘要（summary）整理成文字格式，提供 AI 分析
 summary = df.describe(include='all').to_string()
 
@@ -90,14 +154,74 @@ def ask_ollama(event=None):
 ### ⑧ 圖表分析功能：顯示各產品的平均種植時間
 def plot_chart():
     try:
-        plt.figure(figsize=(10, 5))
-        sns.barplot(data=df, x="產品名稱", y="種植時間（日）", estimator='mean', errorbar=None)
-        plt.title("📈 各產品平均種植時間（日）")
-        plt.xticks(rotation=45)
-        plt.tight_layout()
-        plt.show()
+        # 設定中文字型
+        plt.rcParams['font.sans-serif'] = ['Arial Unicode MS','Microsoft YaHei', 'SimHei', 'sans-serif']
+        plt.rcParams['axes.unicode_minus'] = False # 正確顯示負號
+        
+        while True:
+            print("\n可用的圖表選項：")
+            print("1. 各產品平均種植時間")
+            print("2. 各產品總數量統計")
+            print("3. 不同狀態的產品分布")
+            print("4. 自定義圖表")
+            print("q. 退出")
+            
+            choice = input("\n請選擇要生成的圖表類型 (1-4 或 q 退出): ").strip()
+            
+            if choice.lower() == 'q':
+                break
+                
+            plt.figure(figsize=(10, 5))
+            
+            if choice == '1':
+                sns.barplot(data=df, x="產品名稱", y="種植時間（日）", estimator='mean', errorbar=None)
+                plt.title("📈 各產品平均種植時間（日）", fontsize=12)
+                plt.xlabel("產品名稱", fontsize=10)
+                plt.ylabel("種植時間（日）", fontsize=10)
+            
+            elif choice == '2':
+                product_counts = df['產品名稱'].value_counts()
+                sns.barplot(x=product_counts.index, y=product_counts.values)
+                plt.title("📊 各產品數量統計", fontsize=12)
+                plt.xlabel("產品名稱", fontsize=10)
+                plt.ylabel("數量", fontsize=10)
+            
+            elif choice == '3':
+                status_counts = df['狀態'].value_counts()
+                plt.pie(status_counts.values, labels=status_counts.index, autopct='%1.1f%%')
+                plt.title("🔄 產品狀態分布", fontsize=12)
+            
+            elif choice == '4':
+                print("\n可用的欄位：")
+                numeric_columns = df.select_dtypes(include=['int64', 'float64']).columns
+                print(", ".join(numeric_columns))
+                
+                x_col = input("請輸入 X 軸欄位名稱: ").strip()
+                y_col = input("請輸入 Y 軸欄位名稱: ").strip()
+                
+                if x_col in df.columns and y_col in df.columns:
+                    sns.barplot(data=df, x=x_col, y=y_col, estimator='mean', errorbar=None)
+                    plt.title(f"📊 {x_col} vs {y_col}", fontsize=12)
+                    plt.xlabel(x_col, fontsize=10)
+                    plt.ylabel(y_col, fontsize=10)
+                else:
+                    print("❌ 無效的欄位名稱")
+                    continue
+            
+            else:
+                print("❌ 無效的選項")
+                continue
+            
+            plt.xticks(rotation=45, ha='right')
+            plt.tight_layout()
+            plt.show()
+            
+            continue_plot = input("\n是否要繼續生成其他圖表？(y/n): ").lower()
+            if continue_plot != 'y':
+                break
+                
     except Exception as e:
-        output.insert(tk.END, f"📉 圖表錯誤: {str(e)}\n\n")
+        print(f"�� 圖表錯誤: {str(e)}")
 
 # 綁定 Enter 鍵可直接送出問題
 entry.bind("<Return>", ask_ollama)
