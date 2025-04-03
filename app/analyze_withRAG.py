@@ -3,7 +3,7 @@ import ollama
 import json
 import time
 from difflib import SequenceMatcher
-from utils import load_data,product_list,select_file,question_list,contains_english,translate_to_chinese,df_to_documents,build_faiss_index,search_similar_documents
+from utils import load_data,product_list,select_file,question_list,contains_english,translate_to_chinese,df_to_documents,build_faiss_index,search_similar_documents 
 from tkinter import filedialog, Tk
 import os
 from sentence_transformers import SentenceTransformer
