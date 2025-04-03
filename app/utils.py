@@ -3,7 +3,7 @@ import json
 import numpy as np  # 需要這個來判斷 NaN
 from tkinter import filedialog, Tk
 import os
-from deep_translator import GoogleTranslator  # pip install deep-translator
+from deep_translator import GoogleTranslator  # pip install deep-translator  
 import re
 from sentence_transformers import SentenceTransformer
 import faiss
