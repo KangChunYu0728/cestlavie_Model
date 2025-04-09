@@ -3,7 +3,7 @@ import json
 import numpy as np  # 需要這個來判斷 NaN
 from tkinter import filedialog, Tk
 import os
-from deep_translator import GoogleTranslator  # pip install deep-translator  
+from deep_translator import GoogleTranslator  # pip install deep-translator
 import re
 from sentence_transformers import SentenceTransformer
 import faiss
@@ -110,8 +110,6 @@ def df_to_documents(df):
         documents.append(doc)
     return documents
 
-import pickle
-
 def build_faiss_index(documents, index_path="faiss_index.index", doc_path="documents.pkl"):
     model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
     embeddings = model.encode(documents)
@@ -136,7 +134,7 @@ def build_faiss_index(documents, index_path="faiss_index.index", doc_path="docum
 
 
 
-def search_similar_documents(question, index, documents, model, top_k=5):
+def search_similar_documents(question, index, documents, model, top_k=50):
     """查詢與問題最相關的文件段落"""
     query_embedding = model.encode([question])
     faiss.normalize_L2(query_embedding)
