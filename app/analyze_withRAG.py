@@ -3,7 +3,7 @@ import ollama
 import json
 import time
 from difflib import SequenceMatcher
-from utils import load_data,product_list,select_file,question_list,contains_english,translate_to_chinese,df_to_documents,build_faiss_index,search_similar_documents 
+from utils import load_data,product_list,select_file,question_list,contains_english,translate_to_chinese,df_to_documents,build_faiss_index,search_similar_documents
 from tkinter import filedialog, Tk
 import os
 from sentence_transformers import SentenceTransformer
@@ -47,7 +47,7 @@ def load_example_log():
 
 def similarity(generated_answer, expected_answer):
     """
-    根據預期答案中有多少字被回應正確命中，決定相似度。
+            根據預期答案中有多少字被回應正確命中，決定相似度。
     - 完全包含 ➜ 1.0
     - 對到部分 ➜ 0.3 ~ 0.9（依字元命中比例）
     - 完全沒對到 ➜ 0.0
@@ -97,7 +97,7 @@ def filter_df_by_question(df, question, product_list): #產品關鍵字提取
         if name in question:
             filtered = df[df["產品名稱"].str.contains(name, na=False)]
             print(f"偵測到產品名稱：{name}，共 {len(filtered)} 筆")
-            print(filtered.head(0).to_string(index=False))  # 列印出篩選結果
+           # print(filtered.head(0).to_string(index=False))  # 列印出篩選結果
             return filtered, name
 
     return df.head(10000), None  
@@ -119,22 +119,32 @@ def generate_prompts(question):
     #查詢過去範例紀錄
     example_text = load_example_log()
 
-    # 查詢最相關的文件段落
-    top_k_docs = search_similar_documents(question, index2, docs, embedding_model, top_k=5)
-    print(f"🔢 擷取段落數量：{len(top_k_docs)}")
-
-    # 將結果合併成一段文字
-    retrieved_context = "\n".join(top_k_docs)
-
-    print("🔍 擷取到的相關資料片段：")
-    print(retrieved_context)
+   
+    #print(f"🔢 擷取段落數量：{len(top_k_docs)}")
+    if "共" in question or "總數" in question:
+     # 將結果合併成一段文字
+     top_k = len(filtered_df)
+     # 查詢最相關的文件段落
+     top_k_docs = search_similar_documents(question, index2, docs, embedding_model, top_k)
+     retrieved_context = "\n".join(top_k_docs)
+     
+     print(f"🔍 擷取到的相關資料片段：共{len(filtered_df)}筆")
+    else :
+     # 查詢最相關的文件段落
+     top_k_docs = search_similar_documents(question, index2, docs, embedding_model, top_k=20)
+     # 將結果合併成一段文字
+     retrieved_context = "\n".join(top_k_docs)
+      
+     
+     print("🔍 擷取到的相關資料片段:共20筆")
+    #print(retrieved_context.head(5))  # 列印出篩選結果
 
     system_prompt = f"""
     你是一位資料統計助理，請根據表格中的資料回答使用者的問題。請嚴格遵守以下規則：
 
     - Follow the data，you are not allowed to predict or guess.
     - Your answer must be in traditional Chinese.
-    - Every row in the data represents a product.
+    - Every row in the data should be counted as a product，even they are the same product ID.
     - If there aren't any relative information in the data,please answer：「No information」。
     - It is forbidden to give the answer which is not in the data, and not to repeat the question.
     - Here are some examples of the questions , correct answers and wrong answers,please avoid answering like the wrong answers:
