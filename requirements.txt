@@ -11,4 +11,5 @@ matplotlib
 plotly==5.20.0
 seaborn
 
-# GUI Support
+# GUI
+streamlit

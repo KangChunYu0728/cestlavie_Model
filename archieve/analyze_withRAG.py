@@ -3,12 +3,11 @@ import ollama
 import json
 import time
 from difflib import SequenceMatcher
-from utils import load_data,product_list,select_file,question_list,contains_english,translate_to_chinese,df_to_documents,build_faiss_index,search_similar_documents
+from archieve.utils import load_data,product_list,select_file,question_list,contains_english,translate_to_chinese,df_to_documents,build_faiss_index,search_similar_documents
 from tkinter import filedialog, Tk
 import os
 from sentence_transformers import SentenceTransformer
-from utils import load_faiss_index
-
+from archieve.utils import load_faiss_index
 
 
 # 初始化 Ollama 客戶端
@@ -19,10 +18,11 @@ json_file_path = None
 df = None
 summary = None
 documents = None
+
 # 建立模型
 model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
-
 output_dir = "test_results"
+
 def load_example_log():
     """讀取過去範例紀錄，轉為 few-shot 語料"""
     log_path = os.path.join("test_results", "test_results.csv")
