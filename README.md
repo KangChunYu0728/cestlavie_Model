@@ -1,44 +1,36 @@
-# Salad Plant Growth Analysis System
+# 🥬 C'est la Vie AI 系統
 
-## Overview
-This system leverages the **Ollama** open-source model for analyzing plant growth data. It allows users to input queries about plant growth and receive textual insights as well as graphical visualizations (e.g., growth trends, predictions) directly in **Power Apps**. The system utilizes **Microsoft Dataverse** for data storage and **Azure** for model hosting and API deployment.
+一個用 Python Streamlit 打造的智慧分析工具，支援問答、圖表視覺化與圖片生成。
 
-## Workflow
+---
 
-1. **Data Management:**
-   - Data is updated weekly in **Microsoft List** and migrated to **Microsoft Dataverse** using **Power Automate**.
+## ✅ 功能介紹
 
-2. **Model Development:**
-   - The **Ollama model** is used to generate insights and predictions based on plant growth data.
-   - Here is the repo for Ollama: https://github.com/ollama/ollama
-   - Graphs are generated using **Matplotlib** or **Plotly**.
+- **💬 問答分析**：用 ChatGPT 模型（Ollama）回答關於產品資料的問題  
+- **📊 圖表分析**：顯示平均種植時間、數量統計與狀態比例圖  
+- **🎨 圖片生成**：輸入描述，自動產生示意圖  
+- **📥 圖表下載**：所有圖表可另存為 PNG
 
-3. **API Deployment:**
-   - The model is deployed as an API on **Azure App Service** or **Azure Functions**.
-   - The API handles user queries, processes them with the Ollama model, and returns textual insights and graphs.
+---
 
-4. **Frontend (Power Apps):**
-   - **Power Apps** serves as the user interface, where users input queries and view results (textual insights and graphs).
-   - **Power Automate** integrates Power Apps with the Azure-hosted model API.
+## 📦 安裝教學
 
-## Steps to Deploy
+1. 建立虛擬環境並啟用：
 
-1. **Set up Microsoft Dataverse** for storing plant data.
-2. **Migrate plant data** from Microsoft List to Dataverse using Power Automate.
-3. **Train and deploy the Ollama model** on Azure (using FastAPI or Flask).
-4. **Integrate the model API** with Power Apps using Power Automate.
-5. **Test the system** to ensure smooth user interaction and real-time graph generation.
+```bash
+python -m venv .venv
+source .venv/bin/activate  # Windows 用 .\.venv\Scripts\activate
 
-## Prerequisites
+2. 安裝套件
 
-- **Microsoft Dataverse** for data storage.
-- **Azure Subscription** for deploying the model and API.
-- **Power Apps** for the frontend user interface.
-- **Power Automate** for workflow automation.
-- **Matplotlib/Plotly** for generating graphs.
-- **Ollama model** for plant growth analysis.
+pip install -r requirements.txt
 
-## Workflow
+3. 安裝並啟動 Ollama 模型：
 
-<img width="912" alt="Screenshot 2025-03-01 at 10 12 16 PM" src="https://github.com/user-attachments/assets/aa8a6562-46f6-4b88-9e93-25a58f86fe10" />
+ollama pull mistral
 
+4. 執行方式
+
+streamlit run app/main.py
+
+打開瀏覽器: http://localhost:8501
