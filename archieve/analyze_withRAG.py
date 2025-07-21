@@ -75,7 +75,7 @@ def load_json():
             index2, docs, embedding_model = load_faiss_index()
 
             # 如果第一次執行 則取消注解這一行
-            # index2, docs, embedding_model = build_faiss_index(documents)
+            #index2, docs, embedding_model = build_faiss_index(documents)
             print("✅ FAISS 向量索引已建立！")
 
 
@@ -131,13 +131,13 @@ def generate_prompts(question):
      print(f"🔍 擷取到的相關資料片段：共{len(filtered_df)}筆")
     else :
      # 查詢最相關的文件段落
-     top_k_docs = search_similar_documents(question, index2, docs, embedding_model, top_k=20)
+     top_k_docs = search_similar_documents(question, index2, docs, embedding_model, top_k=5)
      # 將結果合併成一段文字
      retrieved_context = "\n".join(top_k_docs)
       
      
-     print("🔍 擷取到的相關資料片段:共20筆")
-    #print(retrieved_context.head(5))  # 列印出篩選結果
+     print("🔍 擷取到的相關資料片段:共5筆")
+    print(retrieved_context)  # 列印出篩選結果
 
     system_prompt = f"""
     你是一位資料統計助理，請根據表格中的資料回答使用者的問題。請嚴格遵守以下規則：
