@@ -21,7 +21,7 @@
 python -m venv .venv
 source .venv/bin/activate  # Windows 用 .\.venv\Scripts\activate
 
-2. 安裝套件
+2. 安裝套件: 
 
 pip install -r requirements.txt
 
