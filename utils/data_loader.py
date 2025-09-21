@@ -7,7 +7,7 @@ import streamlit as st
 def load_data():
     try:
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        file_path = os.path.join(current_dir, "../../Data/merged_product_data_sorted_json.json")
+        file_path = os.path.join(current_dir, "../Data/merged_product_data_sorted_json.json")
 
         if not os.path.exists(file_path):
             st.error(f"❌ 找不到檔案: {file_path}")
