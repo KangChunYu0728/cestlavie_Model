@@ -1,5 +1,5 @@
 # Openai integration
-openai
+openai>=1.42.0
 
 # Data processing
 pandas
@@ -7,9 +7,9 @@ numpy==1.26.4
 openpyxl==3.1.5
 
 # Visualization
-matplotlib
+matplotlib>=3.8
 plotly==5.20.0
-seaborn
+seaborn>=0.13
 
 # GUI
-streamlit
+streamlit>=1.36
