@@ -1,5 +1,5 @@
-# Ollama integration
-ollama==0.4.7
+# Openai integration
+openai
 
 # Data processing
 pandas
