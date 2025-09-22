@@ -15,7 +15,7 @@ df = load_data()
 
 # 💬 Chat Interface
 if page == "💬 問答分析":
-    st.title("💬 沙拉產品智慧助理")
+    st.title("💬 沙拉米 AI智慧助理")
     chat_interface(df)
 
 # 📊 Analytics + 🎨 Image Generator

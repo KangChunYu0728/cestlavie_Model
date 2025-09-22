@@ -31,7 +31,7 @@ def chat_interface(df: pd.DataFrame):
     if "messages" not in st.session_state:
         st.session_state.messages = []  # list[{"role": "user"|"assistant", "content": str}]
 
-    st.markdown("請輸入您的分析問題，AI 將根據資料摘要與對話脈絡回答：")
+    st.markdown("歡迎問任何跟種植有關問題，AI 將根據資料摘要與對話脈絡回答：")
 
     # Render history
     for m in st.session_state.messages:
